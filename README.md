@@ -1,16 +1,27 @@
-# React + Vite
+## TestGen
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+App generates automatic test cases in Python (Playwright). 
 
-Currently, two official plugins are available:
+## Demo
+https://test-gen-black.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Screenshot
+TBD
 
-## React Compiler
+## Tech stack
+React, Vite, FastAPI, Python, Playwright, Gemini API, Vercel, Render
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Functions
+Generating tests from URL, syntax highlighting, download .py, token counter
 
-## Expanding the ESLint configuration
+## How to launch locally
+1 step - frontend: npm run dev
+2 step - backend: uvicorn main:app --reload
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Ubuntu 22.04 LTS
+VS Code 0958016b
+Brave Browser 148.1.90.121 
+
+## Architecture
+Fronted on Vercel communicates with backend FastAPI on Render, which then proxy requests to Gemini API
