@@ -17,6 +17,7 @@ origins = [
     "http://localhost:5172",
     "http://localhost:5171",
     "http://localhost:5170",
+    "https://test-gen-black.vercel.app",
 ]
 
 app.add_middleware(
