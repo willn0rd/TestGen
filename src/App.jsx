@@ -96,7 +96,7 @@ function CopyButton({ text }) {
         gap: "6px",
       }}
     >
-      {copied ? "✓ skopiowano" : "⎘ kopiuj"}
+      {copied ? "✓ copied" : "⎘ copy"}
     </button>
   );
 }
@@ -117,11 +117,10 @@ function DownloadButton({code, url}) {
 
     a.href = URL.createObjectURL(blob);
     a.style.display = 'none';
-    a.download = newName; 
+    a.download = newName;
     document.body.appendChild(a);
     a.click();
     URL.revokeObjectURL(a.href);
-
   };
   return (
     <button
@@ -141,9 +140,9 @@ function DownloadButton({code, url}) {
         gap: "6px",
       }}
     >
-      {"↓ pobierz .py"}
+      {"↓ download .py"}
     </button>
-  ); 
+  );
 }
 
 function CodeBlock({ code, url }) {
@@ -260,19 +259,16 @@ export default function App() {
   };
 
   const scrapePageContent = async (targetUrl) => {
-    // Use a CORS proxy to fetch page content
-    addLog(`→ Pobieranie zawartości: ${targetUrl}`, "info");
+    addLog(`→ Fetching content: ${targetUrl}`, "info");
     try {
       const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
       const res = await fetch(proxyUrl);
       const data = await res.json();
       const html = data.contents;
 
-      // Extract meaningful text content
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
 
-      // Remove scripts and styles
       doc.querySelectorAll("script, style, noscript").forEach((el) => el.remove());
 
       const title = doc.title || "No title";
@@ -328,11 +324,11 @@ ${buttons || "none"}
 === LINKS (sample) ===
 ${links || "none"}`;
 
-      addLog(`✓ Strona pobrana: "${title}"`, "success");
-      addLog(`  Znaleziono: ${doc.querySelectorAll("input,select,textarea").length} pól, ${doc.querySelectorAll("button,[role=button]").length} przycisków, ${doc.querySelectorAll("a").length} linków`, "dim");
+      addLog(`✓ Page fetched: "${title}"`, "success");
+      addLog(`  Found: ${doc.querySelectorAll("input,select,textarea").length} fields, ${doc.querySelectorAll("button,[role=button]").length} buttons, ${doc.querySelectorAll("a").length} links`, "dim");
       return summary;
     } catch (err) {
-      throw new Error(`Nie udało się pobrać strony: ${err.message}`);
+      throw new Error(`Failed to fetch page: ${err.message}`);
     }
   };
 
@@ -345,21 +341,21 @@ ${links || "none"}`;
     setErrorMsg("");
 
     try {
-      addLog("▶ Uruchamianie generatora testów AI", "prompt");
+      addLog("▶ Starting AI test generator", "prompt");
       addLog("", "dim");
 
       let pageContent;
       try {
         pageContent = await scrapePageContent(url.trim());
       } catch (scrapeErr) {
-        addLog(`⚠ Nie udało się pobrać strony przez proxy`, "error");
-        addLog(`  Generuję testy na podstawie samego URL...`, "dim");
-        pageContent = `URL: ${url.trim()}\n\nUwaga: Nie udało się pobrać zawartości strony. Wygeneruj testy bazując na URL i typowych wzorcach dla tego rodzaju strony.`;
+        addLog(`⚠ Failed to fetch page via proxy`, "error");
+        addLog(`  Generating tests based on URL only...`, "dim");
+        pageContent = `URL: ${url.trim()}\n\nNote: Could not fetch page content. Generate tests based on the URL and typical patterns for this type of page.`;
       }
 
       setStatus("generating");
       addLog("", "dim");
-      addLog("⚡ Wysyłam do Gemini API...", "info");
+      addLog("⚡ Sending to Gemini API...", "info");
 
       const response = await fetch(`${import.meta.env.VITE_API_URL}/generate`, {
         method: "POST",
@@ -377,19 +373,19 @@ ${links || "none"}`;
         throw new Error(err.error?.message || `HTTP ${response.status}`);
       }
 
-        const data = await response.json();
-        const code = (data.code || "")
-          .replace(/^```python\n?/, "")
-          .replace(/\n?```$/, "")
-          .trim();
+      const data = await response.json();
+      const code = (data.code || "")
+        .replace(/^```python\n?/, "")
+        .replace(/\n?```$/, "")
+        .trim();
 
       addLog("", "dim");
-      addLog("✓ Generowanie zakończone!", "success");
+      addLog("✓ Generation complete!", "success");
 
       const testCount = (code.match(/^def test_/gm) || []).length;
-      addLog(`  Wygenerowano ${testCount} testów`, "dim");
+      addLog(`  Generated ${testCount} tests`, "dim");
       addLog("", "dim");
-      addLog("Jak uruchomić (Ubuntu):", "info");
+      addLog("How to run (Ubuntu):", "info");
       addLog("  sudo apt update && sudo apt install -y python3-pip", "dim");
       addLog("  pip3 install playwright pytest pytest-playwright", "dim");
       addLog("  playwright install chromium", "dim");
@@ -405,7 +401,7 @@ ${links || "none"}`;
       setStatus("done");
     } catch (err) {
       addLog("", "dim");
-      addLog(`✗ Błąd: ${err.message}`, "error");
+      addLog(`✗ Error: ${err.message}`, "error");
       setErrorMsg(err.message);
       setStatus("error");
     }
@@ -502,10 +498,10 @@ ${links || "none"}`;
             </span>
           </h1>
           <p style={{ color: "#4a5180", fontSize: "14px", margin: 0 }}>
-            Podaj URL → AI analizuje stronę → generuje testy Playwright (Python)
+            Enter a URL → AI analyzes the page → generates Playwright (Python) tests
           </p>
           <p style={{ color: "#ffc777", fontSize: "12px", margin: "8px 0 0" }}>
-            ⚠ Aplikacja korzysta z darmowych API — jeśli generowanie się nie powiedzie, spróbuj ponownie.
+            ⚠ This app uses free-tier APIs — if generation fails, please try again.
           </p>
         </div>
 
@@ -530,7 +526,7 @@ ${links || "none"}`;
               marginBottom: "8px",
             }}
           >
-            URL do przeanalizowania
+            URL to analyze
           </label>
           <div style={{ display: "flex", gap: "12px" }}>
             <input
@@ -577,10 +573,10 @@ ${links || "none"}`;
             >
               {isLoading ? (
                 <>
-                  <Spinner /> generuję...
+                  <Spinner /> generating...
                 </>
               ) : (
-                "▶ generuj testy"
+                "▶ generate tests"
               )}
             </button>
           </div>
@@ -638,7 +634,7 @@ ${links || "none"}`;
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" }}>
                   <Spinner />
                   <span style={{ color: "#3d4466", fontSize: "13px" }}>
-                    {status === "scraping" ? "analizuję stronę..." : "Gemini generuje testy..."}
+                    {status === "scraping" ? "analyzing page..." : "Gemini is generating tests..."}
                   </span>
                 </div>
               )}
@@ -670,7 +666,7 @@ ${links || "none"}`;
                   letterSpacing: "0.1em",
                 }}
               >
-                ✓ Wygenerowane testy
+                ✓ Generated tests
               </span>
               {tokenUsage && (
                 <span style={{ fontSize: "11px", color: "#636da6" }}>
