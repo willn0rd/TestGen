@@ -7,7 +7,7 @@ AI-powered test generator that analyzes any webpage and produces ready-to-run Pl
 https://test-gen-black.vercel.app/
 
 ## Screenshot
-/TestGen.png
+![TestGen](Testgen.png)
 
 ## Tech stack
 React, Vite, FastAPI, Python, Playwright, Gemini API, Vercel, Render
