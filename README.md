@@ -7,7 +7,7 @@ App generates automatic test cases in Python (Playwright).
 https://test-gen-black.vercel.app/
 
 ## Screenshot
-TestGen.png
+/TestGen.png
 
 ## Tech stack
 React, Vite, FastAPI, Python, Playwright, Gemini API, Vercel, Render
