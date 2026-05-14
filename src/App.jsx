@@ -361,7 +361,7 @@ ${links || "none"}`;
       addLog("", "dim");
       addLog("⚡ Wysyłam do Gemini API...", "info");
 
-      const response = await fetch("http://localhost:8000/generate", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

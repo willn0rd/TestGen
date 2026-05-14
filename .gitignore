@@ -36,3 +36,6 @@ dist/
 # Python cache
 __pycache__/
 *.pyc
+
+# localhost
+.env.local
